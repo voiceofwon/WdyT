@@ -4,7 +4,7 @@ import java.util.List;
 
 public interface MemberService {
 
-    long joinMember(MemberParam memberParam);
+    long joinMember(MemberParam memberParam) throws Exception;
 
     long deleteMember(long id);
 

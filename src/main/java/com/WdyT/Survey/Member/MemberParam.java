@@ -3,15 +3,16 @@ package com.WdyT.Survey.Member;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
-@Builder
+@NoArgsConstructor
 public class MemberParam {
 
-    long id;
-    String nm;
-    String pw;
-    String role;
+    private String email;
+    private String nickname;
+    private String password;
+    private int age;
 }

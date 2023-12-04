@@ -1,6 +1,7 @@
 package com.WdyT.Survey.Member;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -8,17 +9,32 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class MemberServiceImpl implements MemberService{
+public class MemberServiceImpl implements MemberService {
 
     private final MemberDAO memberDAO;
 
+    private final PasswordEncoder passwordEncoder;
+
     @Override
-    public long joinMember(MemberParam memberParam) {
-        Member member= Member.builder()
-                .nickname(memberParam.getNm())
-                .password(memberParam.getPw())
-                .role(memberParam.getRole())
+    public long joinMember(MemberParam memberParam) throws Exception{
+
+        if(memberDAO.findByNickname(memberParam.getNickname()).isPresent()){
+            throw new Exception("이미 존재하는 이메일입니다.");
+        }
+
+        if(memberDAO.findByEmail(memberParam.getEmail()).isPresent()){
+            throw new Exception("이미 존재하는 닉네임입니다.");
+        }
+
+        Member member = Member.builder()
+                .email(memberParam.getEmail())
+                .password(memberParam.getPassword())
+                .nickname(memberParam.getNickname())
+                .age(memberParam.getAge())
+                .role(Role.USER)
                 .build();
+
+        member.passwordEncode(passwordEncoder);
 
         return memberDAO.save(member).getId();
     }
